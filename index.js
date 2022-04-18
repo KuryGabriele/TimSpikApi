@@ -19,7 +19,7 @@ app.listen(
 var con = mysql.createConnection({
     host: "127.0.0.1",
     user: "timspik",
-    password: "GR66iwb#nyGBHd#s5f!yyrUr",
+    password: "v5b%wy&J%F^M4CLAUsXZDJqt",
     database: "timspik"
 });
 
@@ -186,6 +186,31 @@ app.get('/getAudioServerAddress', (req, res) => {
         } else {
             res.status(400).send({
                 message: "Server address not found. WTF??"
+            });
+        }
+    });
+});
+
+app.get('/getAudioSettings', (req, res) => {
+    print("Online users requested");
+    res.header("Access-Control-Allow-Origin", "*");
+
+    con.query("SELECT sampleRate, bits, channels FROM audioSettings WHERE id=1", function (err, result, fields) {
+        if (err) {
+            res.status(400).send({
+                error: "You messed up the request."
+            })
+        }
+
+        if(result.length > 0){
+            res.status(200).send({
+                sampleRate: result[0].sampleRate,
+                bits: result[0].bits,
+                channels: result[0].channels
+            });
+        } else {
+            res.status(400).send({
+                message: "Audio settings not found. WTF??"
             });
         }
     });
