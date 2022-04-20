@@ -215,3 +215,51 @@ app.get('/getAudioSettings', (req, res) => {
         }
     });
 });
+
+app.get('/getLastUpdaterVersion', (req, res) => {
+    print("Updater version requested");
+    res.header("Access-Control-Allow-Origin", "*");
+
+    con.query("SELECT id, downloadUrl FROM updaterVersions order by id desc limit 1", function (err, result, fields) {
+        if (err) {
+            res.status(400).send({
+                error: "You messed up the request."
+            })
+        }
+
+        if(result.length > 0){
+            res.status(200).send({
+                version: result[0].id,
+                url: result[0].downloadUrl,
+            });
+        } else {
+            res.status(400).send({
+                message: "Server address not found. WTF??"
+            });
+        }
+    });
+});
+
+app.get('/getLastAppVersion', (req, res) => {
+    print("App version requested");
+    res.header("Access-Control-Allow-Origin", "*");
+
+    con.query("SELECT id, downloadUrl FROM timspikVersions order by id desc limit 1", function (err, result, fields) {
+        if (err) {
+            res.status(400).send({
+                error: "You messed up the request."
+            })
+        }
+
+        if(result.length > 0){
+            res.status(200).send({
+                version: result[0].id,
+                url: result[0].downloadUrl,
+            });
+        } else {
+            res.status(400).send({
+                message: "Server address not found. WTF??"
+            });
+        }
+    });
+});
