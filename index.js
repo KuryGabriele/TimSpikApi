@@ -19,7 +19,7 @@ app.listen(
 var con = mysql.createConnection({
     host: "127.0.0.1",
     user: "timspik",
-    password: "v5b%wy&J%F^M4CLAUsXZDJqt",
+    password: "ZEcfc6egx#!@#Gg^iqs5C$2*",
     database: "timspik"
 });
 
@@ -263,3 +263,25 @@ app.get('/getLastAppVersion', (req, res) => {
         }
     });
 });
+
+app.get('/addUser/:nick/:url', (req, res) => {
+    print("User volumes requested");
+    res.header("Access-Control-Allow-Origin", "*");
+
+    const {nick} = req.params;
+    const {url} = req.params;
+
+    con.query("REPLACE INTO users SET nick = '" + nick + "', img = '" + url + "' + firstJoin = GETDATE()", function (err, result, fields) {
+        if (err) {
+            res.status(400).send({
+                error: "You messed up the request."
+            })
+        }
+
+        if(result.length > 0){
+            res.status(200).send({
+                message: "User added"
+            });
+        }
+    });
+})
