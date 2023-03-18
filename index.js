@@ -51,18 +51,15 @@ app.get('/authenticateUser/:hash', (req, res) => {
                 error: "You messed up the request."
             })
         }
-        var jsonOut = [];
         if(result.length > 0){
-            result.map(function(ids) {        
-                jsonOut.push({ 
-                        "id" : ids.id,
-                        "nick": ids.nick,
-
-                });
-            })
-            res.status(200).send(jsonOut);
+            res.status(200).send({
+                id: result[0].id,
+                nick: result[0].nick
+            });
         } else {
-            res.status(200).send(jsonOut);
+            res.status(400).send({
+                message: "Server address not found. WTF??"
+            });
         }
     });
 });
