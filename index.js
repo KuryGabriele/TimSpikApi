@@ -1,5 +1,6 @@
 var mysql = require('mysql'); 
 const app = require('express')();
+const {HOST, USER, PSW, DB} = require('./constants')
 const PORT = 6980;
 
 var verbose = true;
@@ -17,10 +18,10 @@ app.listen(
 
 //Database stuff
 var con = mysql.createConnection({
-    host: "127.0.0.1",
-    user: "timspik",
-    password: "ZEcfc6egx#!@#Gg^iqs5C$2*",
-    database: "timspik"
+    host: HOST,
+    user: USER,
+    password: PSW,
+    database: DB
 });
 
 con.connect(function(err) {
@@ -36,6 +37,34 @@ app.get('/test', (req, res) => {
     res.status(200).send({
         message: "The API is working!"
     })
+});
+
+app.get('/authenticateUser/:hash', (req, res) => {
+    print("Authentication reqeusted");
+    res.header("Access-Control-Allow-Origin", "*");
+
+    const {hash} = req.params;
+
+    con.query("SELECT id, nick FROM users WHERE hash='" + hash + "'", function (err, result, fields){
+        if (err) {
+            res.status(400).send({
+                error: "You messed up the request."
+            })
+        }
+        var jsonOut = [];
+        if(result.length > 0){
+            result.map(function(ids) {        
+                jsonOut.push({ 
+                        "id" : ids.id,
+                        "nick": ids.nick,
+
+                });
+            })
+            res.status(200).send(jsonOut);
+        } else {
+            res.status(200).send(jsonOut);
+        }
+    });
 });
 
 app.get('/getOnlineUsers', (req, res) => {
