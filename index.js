@@ -290,21 +290,19 @@ app.get('/getLastAppVersion', (req, res) => {
     });
 });
 
-app.get('/addUser/:nick/:url', (req, res) => {
+app.get('/addUser/:nick/:url/:hash', (req, res) => {
     print("User volumes requested");
     res.header("Access-Control-Allow-Origin", "*");
 
     const {nick} = req.params;
     const {url} = req.params;
-
-    con.query("REPLACE INTO users SET nick = '" + nick + "', img = '" + url + "' + firstJoin = GETDATE()", function (err, result, fields) {
+    const {hash} = req.params;
+    con.query("REPLACE INTO users SET nick = '" + nick + "', img = '" + url + "', firstJoin = NOW(), hash = '" + hash + "';", function (err, result, fields) {
         if (err) {
             res.status(400).send({
                 error: "You messed up the request."
             })
-        }
-
-        if(result.length > 0){
+        } else {
             res.status(200).send({
                 message: "User added"
             });
